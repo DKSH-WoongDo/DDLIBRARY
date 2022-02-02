@@ -12,7 +12,7 @@ const MyPage = () => {
 
     const fetchHistoryData = async () => {
         try {
-            const response = await apiHandle('GET', `/history?userID=${cookieHandle.get('AUT').id}`, null, cookieHandle.get('AUT')?.token);
+            const response = await apiHandle('GET', `/history`, null, cookieHandle.get('AUT')?.token, { params: { userID: cookieHandle.get('AUT').id } });
             console.log(response);
             const loadData = response.data;
             if (loadData.isError) {
@@ -31,7 +31,7 @@ const MyPage = () => {
     };
 
     useEffect(() => {
-        if (cookieHandle.get('AUT') && cookieHandle.get('AUT').token)
+        if (cookieHandle.get('AUT')?.token)
             fetchHistoryData();
     }, []);
 

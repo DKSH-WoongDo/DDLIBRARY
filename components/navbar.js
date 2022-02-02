@@ -26,7 +26,7 @@ const Navbar = () => {
     }
 
     useEffect(() => {
-        if (cookieHandle.get('AUT') && cookieHandle.get('AUT')?.token) {
+        if (cookieHandle.get('AUT')?.token) {
             setIsLoggedIn(true);
         } else {
             setIsLoggedIn(false);

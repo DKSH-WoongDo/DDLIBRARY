@@ -161,7 +161,7 @@ const ManagePage = () => {
     }
 
     useEffect(() => {
-        if (cookieHandle.get('AUT') && cookieHandle.get('AUT')?.token && cookieHandle.get('AUT')?.admin) {
+        if (cookieHandle.get('AUT')?.token && cookieHandle.get('AUT')?.admin) {
             fetchInfoData();
             fetchHistoryData();
         } else {

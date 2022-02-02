@@ -34,7 +34,7 @@ const SearchPage = () => {
 
   const submitQuery = () => {
     router.push(`search?q=${query}`)
-    if (cookieHandle.get('AUT') && cookieHandle.get('AUT')?.token !== '') {
+    if (cookieHandle.get('AUT')?.token) {
       fetchSearchData(query);
       setHistory(query);
     }
@@ -42,7 +42,7 @@ const SearchPage = () => {
 
   const fetchSearchData = async (title) => {
     try {
-      const response = await apiHandle('GET', `/search?query=${encodeURI(title)}&option=title`, null, cookieHandle.get('AUT')?.token);
+      const response = await apiHandle('GET', `/search`, null, cookieHandle.get('AUT')?.token, { params: { query: title, option: 'title' } });
       const loadData = response.data;
       if (loadData.isError) {
         toast.warn(loadData.message, { autoClose: 1500 });
