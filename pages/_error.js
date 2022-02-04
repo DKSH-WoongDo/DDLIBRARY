@@ -1,7 +1,7 @@
 import Head from 'next/head';
+import Link from "next/link";
 import Footer from '../components/footer';
 import Navbar from '../components/navbar';
-import Link from "next/link"
 
 const Error = ({ statusCode }) => {
     return (

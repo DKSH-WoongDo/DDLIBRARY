@@ -54,9 +54,8 @@ const ManagePage = () => {
 
     const fetchHistoryData = async () => {
         try {
-            const response = await apiHandle('GET', 'history?isLoanned=true', null, cookieHandle.get('AUT')?.token);
+            const response = await apiHandle('GET', '/history', null, cookieHandle.get('AUT')?.token, { params: { isLoanned: 'true' } });
             const loadData = response.data;
-            console.log(response)
             if (loadData.isError) {
                 toast.warn('대출 내역이 없어요.', { autoClose: 1500 });
                 setBookHistoryList([]);
@@ -106,7 +105,6 @@ const ManagePage = () => {
             if (item && typeof item === 'string') {
                 let [userID, bookID] = item.split(':');
                 arr.push({ userID, bookID });
-                console.log(arr);
             }
         })
         return JSON.stringify(arr);
@@ -122,7 +120,6 @@ const ManagePage = () => {
                 toast.error(loadData.message, { autoClose: 1500 })
             } else {
                 toast.success(loadData.message, { autoClose: 1500 });
-                console.log(loadData)
             }
         } catch (err) {
             toast.error('서버와의 연결이 끊겼습니다.', { autoClose: 1500 })

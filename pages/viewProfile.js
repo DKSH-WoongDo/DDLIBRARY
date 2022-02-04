@@ -13,7 +13,6 @@ const MyPage = () => {
     const fetchHistoryData = async () => {
         try {
             const response = await apiHandle('GET', `/history`, null, cookieHandle.get('AUT')?.token, { params: { userID: cookieHandle.get('AUT').id } });
-            console.log(response);
             const loadData = response.data;
             if (loadData.isError) {
                 toast.warn(loadData.message, { autoClose: 1500 });
@@ -45,8 +44,8 @@ const MyPage = () => {
                 <meta property='og:url' content='https://ddlib.vercel.app/' />
                 <meta property='og:image' content='/img/woongdo.png' />
             </Head>
-            <ToastContainer />
             <Navbar />
+            <ToastContainer />
             <div className='max-w-screen-xl mx-auto px-2 sm:px-6 lg:px-8'>
                 <div className='px-3 mt-10 sm:mt-28'>
                     <h2 className='text-4xl tracking-tight leading-tight font-black text-gray-900 sm:text-5xl sm:leading-none'>

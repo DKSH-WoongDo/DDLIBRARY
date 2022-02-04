@@ -32,7 +32,6 @@ const Register = () => {
           userBirth: cryptoHandle.AES_ENC(userBirth),
         });
         const loadData = response.data;
-        console.log(response)
         if (loadData.isError) {
           toast.error(loadData.message, { autoClose: 1500 });
         }

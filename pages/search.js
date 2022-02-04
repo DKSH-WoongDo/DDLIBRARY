@@ -6,16 +6,34 @@ import { toast, ToastContainer } from 'react-toastify';
 import ModalConfrim from '../components/confirm';
 import Footer from '../components/footer';
 import Navbar from '../components/navbar';
-import Loader from '../components/loader';
 import apiHandle from '../lib/api';
 import cookieHandle from '../lib/cookie';
 
-const SearchPage = () => {
+import * as cookie from 'cookie'
+
+export const getServerSideProps = async (ctx) => {
+  try {
+    const response = await apiHandle(
+      'GET', `/search`, null,
+      JSON.parse(cookie.parse(ctx.req.headers?.cookie).AUT)?.token,
+      { params: { query: ctx.query.q, option: 'title' } });
+    const loadData = response.data;
+    return {
+      props: { isError: loadData.isError, data: loadData.rows ??= null, message: loadData.message },
+    }
+  } catch (err) {
+    return {
+      props: { isError: true, data: null, message: '서버와의 연결이 끊겼습니다.' },
+    }
+  }
+}
+
+const SearchPage = ({ isError, data, message }) => {
+
   const router = useRouter();
 
   const [query, setQuery] = useState(decodeURI(router.asPath.match(new RegExp(`[&?]q=(.*)(&|$)`))?.[1]));
   const [history, setHistory] = useState(query);
-  const [searchBookList, setSearchBookList] = useState([]);
 
   const [alert, setAlert] = useState(false);
   const [xConfirm, setConfirm] = useState(false);
@@ -32,29 +50,7 @@ const SearchPage = () => {
     }
   }
 
-  const submitQuery = () => {
-    router.push(`search?q=${query}`)
-    if (cookieHandle.get('AUT')?.token) {
-      fetchSearchData(query);
-      setHistory(query);
-    }
-  }
-
-  const fetchSearchData = async (title) => {
-    try {
-      const response = await apiHandle('GET', `/search`, null, cookieHandle.get('AUT')?.token, { params: { query: title, option: 'title' } });
-      const loadData = response.data;
-      if (loadData.isError) {
-        toast.warn(loadData.message, { autoClose: 1500 });
-      } else {
-        setSearchBookList(loadData.rows);
-      }
-    } catch (err) {
-      toast.error('서버와의 연결이 끊겼습니다.', { autoClose: 1500 });
-    }
-  };
-
-  const searchBook = searchBookList && searchBookList.map((item, idx) => (
+  const searchBook = !isError && data.map((item, idx) => (
     <>
       <div
         className='cursor-pointer'
@@ -77,19 +73,17 @@ const SearchPage = () => {
         </li>
       </div>
     </>
-  ))
+  ));
 
   const loanAction = async (bookID) => {
     try {
       const response = await apiHandle('PUT', '/loanAction', { bookID }, cookieHandle.get('AUT')?.token);
       const loadData = response.data;
       if (loadData.isError) {
-        console.log(response)
         toast.error(loadData.message, { autoClose: 1500 })
       } else {
         toast.success(loadData.message, { autoClose: 1500 })
         router.push(`search?q=${history}`);
-        fetchSearchData(query);
       }
     } catch (err) {
       toast.error('서버와의 연결이 끊겼습니다.', { autoClose: 1500 });
@@ -98,9 +92,6 @@ const SearchPage = () => {
   };
 
   useEffect(() => {
-    if (cookieHandle.get('AUT') && cookieHandle.get('AUT')?.token) {
-      fetchSearchData(query);
-    }
     if (xConfirm) {
       loanAction(bookID);
     }
@@ -150,11 +141,15 @@ const SearchPage = () => {
                 }}
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
-                    submitQuery();
+                    setHistory(query);
+                    router.push(`search?q=${query}`);
                   }
                 }}
               />
-              <button className='text-gray-500 relative right-10 -mr-5' onClick={() => { submitQuery() }}>
+              <button className='text-gray-500 relative right-10 -mr-5' onClick={() => {
+                setHistory(query);
+                router.push(`search?q=${query}`);
+              }}>
                 <SearchIcon className='h-6 w-6' aria-hidden='true' />
               </button>
             </div>
@@ -170,10 +165,20 @@ const SearchPage = () => {
             </div>
           </div>
         )}
+        {cookieHandle.get('AUT')?.token && isError && (
+          <div>
+            <div className='flex p-4 mb-4 text-sm text-yellow-700 bg-yellow-100 rounded-lg'>
+              <InformationCircleIcon className='inline flex-shrink-0 mr-3 w-5 h-5' />
+              <div>
+                <p>{message}</p>
+              </div>
+            </div>
+          </div>
+        )}
         <div className='relative'>
           <ul className='rounded-md shadow-md bg-white left-0 right-0 -bottom-18 mt-3 p-3'>
             <li className='text-gray-500 border-b border-gray border-solid py-3 px-3 mb-2'>
-              약 {searchBookList?.length}개의 검색 결과가 있습니다.
+              약 {data?.length}개의 검색 결과가 있습니다.
             </li>
             {searchBook}
           </ul>
