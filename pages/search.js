@@ -113,7 +113,7 @@ const SearchPage = () => {
         <meta property='og:title' content='단대라이브러리 : 검색 결과' />
         <meta property='og:description' content='Click This.' />
         <meta property='og:type' content='website' />
-        <meta property='og:url' content='https://ddlibrary.vercel.app/' />
+        <meta property='og:url' content='https://ddlib.vercel.app/' />
         <meta property='og:image' content='/img/woongdo.png' />
       </Head>
       <Navbar />
