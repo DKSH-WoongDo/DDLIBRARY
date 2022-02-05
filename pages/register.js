@@ -13,10 +13,10 @@ const Register = () => {
   const [userPW, setPW] = useState('');
   const [userPW_re, setPW_re] = useState('');
   const [userName, setName] = useState('');
-  const [userBirth, setBirth] = useState('');
+  const [userBirthday, setBirth] = useState('');
 
   const onClickRegister = async () => {
-    if (!userID || !userPW || !userPW_re || !userName || !userBirth) {
+    if (!userID || !userPW || !userPW_re || !userName || !userBirthday) {
       toast.error('입력하지 않은 값들이 있습니다.', { autoClose: 1500 });
     } else if (userPW.length < 8) {
       toast.error('비밀번호는 8자 이상이여야 합니다.', { autoClose: 1500 });
@@ -27,9 +27,8 @@ const Register = () => {
         const response = await apiHandle('POST', '/register', {
           userID: cryptoHandle.AES_ENC(userID),
           userPW: cryptoHandle.AES_ENC(userPW),
-          userPW_re: cryptoHandle.AES_ENC(userPW_re),
           userName: cryptoHandle.AES_ENC(userName),
-          userBirth: cryptoHandle.AES_ENC(userBirth),
+          userBirthday: cryptoHandle.AES_ENC(userBirthday),
         });
         const loadData = response.data;
         if (loadData.isError) {
@@ -37,6 +36,7 @@ const Register = () => {
         }
         router.push(loadData.isError ? '/register' : '/login');
       } catch (err) {
+        console.log(err);
         toast.error('서버와의 연결이 끊겼습니다.', { autoClose: 1500 });
       }
     }
@@ -124,7 +124,7 @@ const Register = () => {
                 placeholder='생년월일을 입력하세요. (ex. 040522)'
                 minLength='6'
                 autoComplete='off'
-                value={userBirth}
+                value={userBirthday}
                 onChange={(e) => {
                   setBirth(e.target.value)
                 }}
