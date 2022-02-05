@@ -49,7 +49,7 @@ const Login = () => {
           toast.success(loadData.message, { autoClose: 1500 });
           setTimeout(() => {
             setLoading(false);
-            router.back();
+            router.push('/');
           }, 1500);
         }
       } catch (err) {

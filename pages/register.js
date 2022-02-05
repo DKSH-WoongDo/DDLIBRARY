@@ -36,6 +36,7 @@ const Register = () => {
         if (loadData.isError) {
           toast.error(loadData.message, { autoClose: 1500 });
         } else {
+          setLoading(true);
           toast.success(loadData.message, { autoClose: 1500 });
           setTimeout(() => {
             setLoading(false);
