@@ -59,8 +59,8 @@ const Navbar = () => {
                                                 </li>
                                             ))}
                                             {cookieHandle.get('AUT')?.admin && (
-                                                <li key='manage' onClick={() => router.push('manage')} className='cursor-pointer px-3 py-2 rounded-md text-sm font-medium'>
-                                                    Manage
+                                                <li key='dashboard' onClick={() => router.push('dashboard')} className='cursor-pointer px-3 py-2 rounded-md text-sm font-medium'>
+                                                    Dashboard
                                                 </li>
                                             )}
                                         </div>
@@ -134,8 +134,8 @@ const Navbar = () => {
                                     </li>
                                 ))}
                                 {cookieHandle.get('AUT')?.admin && (
-                                    <li key='manage' onClick={() => router.push('manage')} className='cursor-pointer px-3 py-2 rounded-md text-sm font-medium'>
-                                        Manage
+                                    <li key='dashboard' onClick={() => router.push('dashboard')} className='cursor-pointer px-3 py-2 rounded-md text-sm font-medium'>
+                                        Dashboard
                                     </li>
                                 )}
                             </div>

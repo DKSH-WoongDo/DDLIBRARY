@@ -10,7 +10,7 @@ import apiHandle from '../lib/api';
 import cookieHandle from '../lib/cookie';
 import cryptoHandle from '../lib/crypto';
 
-const ManagePage = () => {
+const DashboardPage = () => {
     const router = useRouter();
 
     const [alert, setAlert] = useState(false);
@@ -416,4 +416,4 @@ const ManagePage = () => {
     );
 }
 
-export default ManagePage;
+export default DashboardPage;
